@@ -8,6 +8,7 @@ import TaskSearch from './components/TaskSearch';
 import TaskSort, { SortType } from './components/TaskSort';
 import TaskBulkActions from './components/TaskBulkActions';
 import TaskCategories, { Category } from './components/TaskCategories';
+import Link from 'next/link';
 
 export interface Task {
   id: string;
@@ -209,7 +210,7 @@ function App() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
             <CheckCircle2 className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-slate-800 mb-2">TaskFlow Pro</h1>
+          <h1 className="text-4xl font-bold text-slate-800 mb-2">Todo</h1>
           <p className="text-slate-600 text-lg">Advanced task management for productivity</p>
         </div>
 
@@ -304,9 +305,16 @@ function App() {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-slate-500 text-sm">
-            Built with React, TypeScript, and Tailwind CSS
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+          <p className="text-center text-gray-600 dark:text-gray-400">
+            © {new Date().getFullYear()}{' '}
+            <Link 
+              href="https://codingbipro.netlify.app" 
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300" target='blank'
+            >
+              TodoApp
+            </Link>
+            . All rights reserved.
           </p>
         </div>
       </div>
