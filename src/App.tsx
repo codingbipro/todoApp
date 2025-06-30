@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Circle, Plus, Filter } from 'lucide-react';
+import { CheckCircle2, Circle, Filter } from 'lucide-react';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import TaskStats from './components/TaskStats';
@@ -8,7 +8,6 @@ import TaskSearch from './components/TaskSearch';
 import TaskSort, { SortType } from './components/TaskSort';
 import TaskBulkActions from './components/TaskBulkActions';
 import TaskCategories, { Category } from './components/TaskCategories';
-import Link from 'next/link';
 
 export interface Task {
   id: string;
@@ -38,7 +37,7 @@ function App() {
     
     if (savedTasks) {
       try {
-        const parsedTasks = JSON.parse(savedTasks).map((task: any) => ({
+        const parsedTasks = (JSON.parse(savedTasks) as Task[]).map((task) => ({
           ...task,
           createdAt: new Date(task.createdAt),
           updatedAt: new Date(task.updatedAt),
@@ -159,7 +158,7 @@ function App() {
 
   // Filter and sort tasks
   const filteredAndSortedTasks = React.useMemo(() => {
-    let filtered = tasks.filter(task => {
+    const filtered = tasks.filter(task => {
       // Filter by completion status
       const statusMatch = filter === 'all' || 
         (filter === 'active' && !task.completed) ||
@@ -210,7 +209,7 @@ function App() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
             <CheckCircle2 className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-slate-800 mb-2">Todo</h1>
+          <h1 className="text-4xl font-bold text-slate-800 mb-2">Todo App</h1>
           <p className="text-slate-600 text-lg">Advanced task management for productivity</p>
         </div>
 
@@ -308,12 +307,14 @@ function App() {
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
           <p className="text-center text-gray-600 dark:text-gray-400">
             © {new Date().getFullYear()}{' '}
-            <Link 
-              href="https://codingbipro.netlify.app" 
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300" target='blank'
+            <a
+              href="https://codingbipro.netlify.app"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               TodoApp
-            </Link>
+            </a>
             . All rights reserved.
           </p>
         </div>
