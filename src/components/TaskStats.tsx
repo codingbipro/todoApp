@@ -12,14 +12,14 @@ const TaskStats: React.FC<TaskStatsProps> = ({ completed, total }) => {
   return (
     <div className="flex items-center gap-6">
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1 text-slate-600">
-          <Circle className="w-4 h-4" />
-          <span className="text-sm font-medium">{total - completed} Active</span>
-        </div>
-        <div className="w-px h-4 bg-slate-300" />
         <div className="flex items-center gap-1 text-emerald-600">
           <CheckCircle2 className="w-4 h-4" />
           <span className="text-sm font-medium">{completed} Completed</span>
+        </div>
+        <div className="w-px h-4 bg-slate-300" />
+        <div className="flex items-center gap-1 text-slate-600">
+          <Circle className="w-4 h-4" />
+          <span className="text-sm font-medium">{total - completed} Active</span>
         </div>
       </div>
       
