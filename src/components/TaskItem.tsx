@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Check, X, Edit3, Trash2, Save, RotateCcw } from 'lucide-react';
+import { Check, X, Edit3, Trash2, Save, RotateCcw, Flag, Square, CheckSquare } from 'lucide-react';
 import { Task } from '../App';
+import { Category } from './TaskCategories';
 import ConfirmDialog from './ConfirmDialog';
 
 interface TaskItemProps {
@@ -9,6 +10,9 @@ interface TaskItemProps {
   onUpdate: (id: string, title: string) => void;
   onDelete: (id: string) => void;
   index: number;
+  isSelected: boolean;
+  onSelect: (taskId: string, selected: boolean) => void;
+  categories: Category[];
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({
@@ -17,6 +21,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
   onUpdate,
   onDelete,
   index,
+  isSelected,
+  onSelect,
+  categories,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
@@ -52,19 +59,42 @@ const TaskItem: React.FC<TaskItemProps> = ({
     }).format(date);
   };
 
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'text-red-500';
+      case 'medium':
+        return 'text-yellow-500';
+      case 'low':
+        return 'text-green-500';
+      default:
+        return 'text-slate-400';
+    }
+  };
+
+  const taskCategory = categories.find(cat => cat.id === task.categoryId);
+
   return (
     <>
       <div
         className={`group p-6 hover:bg-slate-50 transition-all duration-200 ${
           task.completed ? 'opacity-75' : ''
-        }`}
+        } ${isSelected ? 'bg-indigo-50 border-l-4 border-indigo-500' : ''}`}
         style={{
           animationDelay: `${index * 50}ms`,
           animation: 'slideIn 0.3s ease-out forwards',
         }}
       >
         <div className="flex items-start gap-4">
-          {/* Checkbox */}
+          {/* Selection Checkbox */}
+          <button
+            onClick={() => onSelect(task.id, !isSelected)}
+            className="flex-shrink-0 w-5 h-5 mt-0.5 text-slate-400 hover:text-indigo-500 transition-colors"
+          >
+            {isSelected ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5" />}
+          </button>
+
+          {/* Task Checkbox */}
           <button
             onClick={() => onToggle(task.id)}
             className={`flex-shrink-0 w-6 h-6 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-indigo-100 ${
@@ -109,16 +139,35 @@ const TaskItem: React.FC<TaskItemProps> = ({
               </div>
             ) : (
               <>
-                <p
-                  className={`text-lg font-medium transition-all duration-200 ${
-                    task.completed
-                      ? 'line-through text-slate-500'
-                      : 'text-slate-800'
-                  }`}
-                >
-                  {task.title}
-                </p>
-                <p className="text-sm text-slate-500 mt-1">
+                <div className="flex items-start gap-2 mb-2">
+                  <p
+                    className={`text-lg font-medium transition-all duration-200 flex-1 ${
+                      task.completed
+                        ? 'line-through text-slate-500'
+                        : 'text-slate-800'
+                    }`}
+                  >
+                    {task.title}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    {/* Priority Indicator */}
+                    <div className={`flex items-center gap-1 ${getPriorityColor(task.priority)}`}>
+                      <Flag className="w-3 h-3" />
+                      <span className="text-xs font-medium capitalize">{task.priority}</span>
+                    </div>
+                    
+                    {/* Category Badge */}
+                    {taskCategory && (
+                      <span
+                        className="px-2 py-1 text-xs font-medium text-white rounded-full"
+                        style={{ backgroundColor: taskCategory.color }}
+                      >
+                        {taskCategory.name}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <p className="text-sm text-slate-500">
                   Created {formatDate(task.createdAt)}
                   {task.updatedAt.getTime() !== task.createdAt.getTime() && (
                     <span> • Updated {formatDate(task.updatedAt)}</span>
